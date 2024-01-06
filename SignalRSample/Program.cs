@@ -16,6 +16,7 @@ builder.Services.AddSignalR();
 
 builder.Services.AddSingleton<IJwtHandler>(new JwtHandler(secretKey, jwtIssuer, 30));
 
+builder.Services.AddHostedService<TimeService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
