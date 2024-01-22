@@ -7,9 +7,12 @@ namespace SignalRServer
         private readonly IHubContext<SampleHub> _hubContext;
         private Timer _timer;
 
-        public TimeService(IHubContext<SampleHub> hubContext)
+        private readonly CurrentClientService _currentClientService;
+
+        public TimeService(IHubContext<SampleHub> hubContext, CurrentClientService currentClientService)
         {
             _hubContext = hubContext;
+            _currentClientService = currentClientService;
         }
 
         public Task StartAsync(CancellationToken stoppingToken)
@@ -20,10 +23,11 @@ namespace SignalRServer
 
         private void DoWork(object state)
         {
-
-            var userId = "user123";
-            var message = $"Hello from timed service {DateTime.UtcNow}";
-            _hubContext.Clients.Group(userId).SendAsync("TimedService", message);
+            foreach (var userId in _currentClientService.GetAll())
+            {
+                var message = $"Hello from timed service {DateTime.UtcNow}";
+                _hubContext.Clients.Group(userId).SendAsync("TimedService", message);
+            }
         }
 
         public Task StopAsync(CancellationToken stoppingToken)

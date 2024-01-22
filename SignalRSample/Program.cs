@@ -47,7 +47,7 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddSignalR();
 
 builder.Services.AddSingleton<IJwtHandler>(new JwtHandler(secretKey, jwtIssuer, 30));
-
+builder.Services.AddSingleton<CurrentClientService>();
 builder.Services.AddHostedService<TimeService>();
 builder.Services.AddAuthentication(options =>
 {
